@@ -46,6 +46,12 @@ haris = []
 canvas.create_line(640, 850, 640, 650, tag="taiki_hari", width=10)
 root.after(20, byouga())
 lv = 0
+if_click = 0
+def click():
+    global if_click
+    if_click = 1
+button = tkinter.Button(root, text="Push!", command=click)
+button.place(x=700, y=700, width=100, height=50)
 while True:
     lv += 1
     syote_hari = random.randint(5, (5 + lv))
@@ -54,7 +60,8 @@ while True:
         haris.append((6.28 / syote_hari) * i)
     while True:
         root.after(20, byouga())
-        if key == "space" and before_key != key:
+        if if_click == 1:
+            if_click = 0
             hari -= 1
             break_ = 0
             for i in range(6):
