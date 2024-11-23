@@ -19,7 +19,7 @@ def key_up(e):
     global key
     key = ""
 def byouga():
-    global oval_size, key, hari, before_key, deg, lv
+    global oval_size, key, hari, before_key, deg, lv, top_x, top_y
     try:
         canvas.delete("hari", "oval", "texts")
         canvas.create_oval(640 - oval_size, 100, 640 + oval_size, oval_size * 2 + 100, fill="white", tag="oval")
@@ -36,6 +36,8 @@ def byouga():
         print("Finish!")
         sys.exit()
 before_key = ""
+top_x = 0
+top_y = 0
 oval_size = 150
 game_over = 0
 deg = 0
@@ -59,31 +61,47 @@ while True:
     for i in range(syote_hari):
         haris.append((6.28 / syote_hari) * i)
     while True:
-        root.after(20, byouga())
+        root.after(10, byouga())
         if if_click == 1:
             if_click = 0
             hari -= 1
             break_ = 0
+            i_hozon = 0
             for i in range(6):
                 canvas.create_line(640, 800 - (600 - oval_size * 2 - 100) / 5 * i, 640, 600 - (600 - oval_size * 2 - 100) / 5 * i, tag="sasu_hari", width=10)
-                root.after(20, byouga())
+                root.after(10, byouga())
                 canvas.delete("sasu_hari")
                 for k in range(len(haris)):
-                    if deg % 6.28 - 0.03 < ((haris[k]) % 6.28) and deg % 6.28 + 0.03 > ((haris[k]) % 6.28):
+                    ax1, ay1, ax2, ay2 = top_x + math.sin(haris[i] + deg * -1) * oval_size, top_y + math.cos(haris[i] + deg * -1) * oval_size, top_x + math.sin(haris[i] + deg * -1) * (oval_size + 200), top_y + math.cos(haris[i] + deg * -1) * (oval_size + 200)
+                    bx1, by1, bx1, by1 = 640, 800 - (600 - oval_size * 2 - 100) / 5 * i, 640, 600 - (600 - oval_size * 2 - 100) / 5 * i
+                    if (ay2 - ay1) / (ax2 - ax1):
+                        canvas.create_oval(-1000, -1000, 2000, 2000, fill="pink", tag="ground")
+                        canvas.create_line(640, 850, 640, 650, tag="ground", width=10)
+                        canvas.create_line(640, 800 - (600 - oval_size * 2 - 100) / 5 * i, 640, 600 - (600 - oval_size * 2 - 100) / 5 * i, tag="ground", width=10)
+                        byouga()
+                        canvas.update()
                         lv -= 1
                         break_ = 1
                         time.sleep(1)
+                        canvas.delete("ground")
                         break
                 if break_ == 1:
+                    i_hozon = i
                     break
             if break_ == 1:
                 break
             haris.append(deg)
             if sasuhari == 0:
+                canvas.create_oval(-1000, -1000, 2000, 2000, fill="lightgreen", tag="ground")
+                canvas.create_line(640, 800 - (600 - oval_size * 2 - 100) / 5 * i_hozon, 640, 600 - (600 - oval_size * 2 - 100) / 5 * i_hozon, tag="ground", width=10)
+                canvas.create_line(640, 850, 640, 650, tag="ground", width=10)
+                byouga()
+                canvas.update()
                 time.sleep(1)
+                canvas.delete("ground")
                 break
             for i in range(6):
-                root.after(20, byouga())
+                root.after(10, byouga())
             sasuhari -= 1
     haris.clear()
         
